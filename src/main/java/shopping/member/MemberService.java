@@ -36,6 +36,11 @@ public class MemberService {
         return new TokenResponse(member.issueToken());
     }
 
+    public Member findByToken(String token) {
+        return memberRepository.findByToken(token)
+                .orElseThrow(() -> new UnauthorizedException("유효하지 않은 토큰입니다."));
+    }
+
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("비밀번호는 비어 있을 수 없습니다.");
