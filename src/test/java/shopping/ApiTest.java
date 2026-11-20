@@ -46,4 +46,18 @@ public abstract class ApiTest {
                 .andReturn().getResponse().getContentAsString();
         return ((Number) JsonPath.read(content, "$.id")).longValue();
     }
+
+    protected String memberJson(String email, String password) {
+        return """
+                {"email": "%s", "password": "%s"}
+                """.formatted(email, password);
+    }
+
+    protected String register(String email, String password) throws Exception {
+        String content = mockMvc.perform(post("/api/members/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(memberJson(email, password)))
+                .andReturn().getResponse().getContentAsString();
+        return JsonPath.read(content, "$.token");
+    }
 }
